@@ -7,7 +7,6 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin, error }) => {
-  console.log(error);
   const [credentials, setCredentials] = useState<Credentials>({
     idInstance: "",
     apiTokenInstance: "",
@@ -27,7 +26,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, error }) => {
         throw new Error("Ошибка аутентификации. Проверьте данные.");
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -42,14 +41,14 @@ const Login: React.FC<LoginProps> = ({ onLogin, error }) => {
             Введите данные Green API для подключения
           </p>
         </div>
-
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="input-container">
             <div>
-              <label htmlFor="idInstance" className="input-label">
+              <label htmlFor="id-instance" className="input-label">
                 ID Instance
               </label>
               <input
+                id="id-instance"
                 type="text"
                 name="idInstance"
                 placeholder="Введите ID Instance"
@@ -58,14 +57,15 @@ const Login: React.FC<LoginProps> = ({ onLogin, error }) => {
                 required
                 className="input-field"
                 disabled={loading}
+                autoComplete="off"
               />
             </div>
-
             <div>
-              <label htmlFor="apiTokenInstance" className="input-label">
+              <label htmlFor="api-token-instance" className="input-label">
                 API Token Instance
               </label>
               <input
+                id="api-token-instance"
                 type="password"
                 name="apiTokenInstance"
                 placeholder="Введите API Token Instance"
@@ -74,30 +74,35 @@ const Login: React.FC<LoginProps> = ({ onLogin, error }) => {
                 required
                 className="input-field"
                 disabled={loading}
+                autoComplete="current-password"
               />
             </div>
           </div>
-
           <p
             className={`${
               error ? "visible" : "invisible min-h-[20px]"
             } text-red-600 text-sm mt-2.5`}
+            role="alert"
           >
             {error}
           </p>
-
           <div>
-            <button type="submit" className="login-button" disabled={loading}>
+            <button
+              type="submit"
+              className="login-button"
+              disabled={loading}
+              aria-busy={loading}
+            >
               {loading ? "Загрузка..." : "Войти"}
             </button>
           </div>
         </form>
-
         <div className="login-link">
           <a
             href="https://green-api.com/"
             target="_blank"
             rel="noopener noreferrer"
+            className="hover:text-green-700 transition-colors"
           >
             Получить доступ к Green API
           </a>

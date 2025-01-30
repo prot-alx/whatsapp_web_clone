@@ -17,14 +17,25 @@ const ChatInput: React.FC<ChatInputProps> = ({
 }) => {
   const isDisabled = !chatId.trim() || !newMessage.trim();
 
+  const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    onChatIdChange(value);
+  };
+
   return (
     <div className="input-area">
       <input
-        type="text"
+        type="tel"
         placeholder="Номер телефона получателя"
         value={chatId}
-        onChange={(e) => onChatIdChange(e.target.value)}
+        onChange={handlePhoneInput}
+        pattern="[0-9]*"
+        inputMode="numeric"
+        aria-label="Номер телефона получателя"
+        title="Введите номер телефона"
         className="number-input-field"
+        maxLength={15}
+        autoComplete="tel"
       />
       <div className="send-message-block">
         <input
