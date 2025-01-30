@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@theme {
+  --color-whatsapp-dark-green: #075e54;
+  --color-whatsapp-green: #128c7e;
+  --color-whatsapp-light-green: #25d366;
+  --color-whatsapp-bubble: #dcf8c6;
+  --color-whatsapp-background: #ece5dd;
+}
+
+.login-container {
+  @apply min-h-screen flex items-center justify-center bg-whatsapp-background;
+}
+
+.login-card {
+  @apply max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-xl;
+}
+
+.login-title {
+  @apply text-center text-3xl font-bold text-whatsapp-dark-green;
+}
+
+.login-subtitle {
+  @apply mt-2 text-center text-sm text-whatsapp-green;
+}
+
+.input-container {
+  @apply rounded-md space-y-4;
+}
+
+.input-label {
+  @apply block text-sm font-medium text-whatsapp-dark-green;
+}
+
+.input-field {
+  @apply mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md 
+    shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 
+    focus:ring-whatsapp-light-green focus:border-whatsapp-light-green;
+}
+
+.login-button {
+  @apply w-full flex justify-center py-2 px-4 border border-transparent 
+    rounded-md shadow-sm text-sm font-medium text-white 
+    bg-whatsapp-light-green hover:bg-whatsapp-green focus:outline-none 
+    focus:ring-2 focus:ring-offset-2 focus:ring-whatsapp-green 
+    transition-colors duration-200;
+}
+
+.login-link {
+  @apply text-center text-sm hover:text-whatsapp-dark-green transition-colors duration-200;
+}
+
+.chat-wrapper {
+  @apply flex h-screen bg-whatsapp-background;
+}
+
+.chat-container {
+  @apply flex flex-col h-screen w-full bg-whatsapp-background;
+  @apply lg:max-w-6xl lg:mx-auto lg:border-x-2 lg:border-gray-300;
+}
+
+.chat-header {
+  @apply bg-whatsapp-dark-green text-white p-4 shadow-md flex justify-between items-center;
+}
+
+.messages-container {
+  @apply flex-1 overflow-y-auto p-4 space-y-4 max-w-4xl mx-auto w-full;
+}
+
+.message {
+  @apply flex max-w-xs md:max-w-md lg:max-w-lg;
+}
+
+.message-outgoing {
+  @apply justify-end ml-auto;
+}
+
+.message-incoming {
+  @apply justify-start mr-auto;
+}
+
+.message-bubble {
+  @apply rounded-lg px-4 py-2 shadow break-words;
+}
+
+.message-bubble-outgoing {
+  @apply bg-whatsapp-bubble rounded-tr-none;
+}
+
+.message-bubble-incoming {
+  @apply bg-white rounded-tl-none;
+}
+
+.input-area {
+  @apply bg-gray-50 p-4 border-t flex flex-col md:flex-row gap-2;
+}
+
+.number-input-field {
+  @apply p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-whatsapp-green w-full md:max-w-[300px];
+}
+
+.chat-input-field {
+  @apply p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-whatsapp-green w-full flex-1;
+}
+
+.send-message-block {
+  @apply flex flex-1 items-center bg-white rounded-lg gap-2;
+}
+
+.send-button {
+  @apply px-4 py-2 bg-whatsapp-green text-white rounded-lg hover:bg-whatsapp-dark-green 
+         transition-colors whitespace-nowrap;
+}
+
+.logout-button {
+  @apply flex items-center gap-2 text-white hover:text-gray-200 transition-colors;
+}
