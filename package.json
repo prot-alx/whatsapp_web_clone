@@ -7,7 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prod": "npm run build && npm run preview",
+    "docker:build": "docker compose build",
+    "docker:start": "docker compose up -d",
+    "docker:stop": "docker compose down",
+    "docker:restart": "npm run docker:stop && npm run docker:start"
   },
   "dependencies": {
     "@green-api/whatsapp-api-client": "^0.4.2",

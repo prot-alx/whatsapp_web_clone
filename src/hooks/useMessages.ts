@@ -16,9 +16,13 @@ export const useMessages = ({
   const isComponentMounted = useRef(true);
 
   const handleSendMessage = async (chatId: string, newMessage: string) => {
+    // Проверяем, что сообщение и ID чата не пустые
     if (!newMessage.trim() || !chatId.trim()) return false;
 
+    // Генерируем уникальный ID для сообщения
     const messageId = Date.now().toString();
+
+    // Сетаем сообщения в массив со статусом sending
     setMessages((prev) => [
       ...prev,
       {
@@ -30,6 +34,7 @@ export const useMessages = ({
       },
     ]);
 
+    // Пытаемся обновить состояние, либо sent, либо error
     try {
       await sendMessage(idInstance, apiTokenInstance, chatId, newMessage);
       setMessages((prev) =>
@@ -57,21 +62,11 @@ export const useMessages = ({
 
       if (notification && isComponentMounted.current) {
         const { body, receiptId } = notification;
-
+        
         if (body.typeWebhook === "incomingMessageReceived") {
           const textMessage = body.messageData?.textMessageData?.textMessage;
           if (textMessage) {
             setMessages((prev) => {
-              const isDuplicate = prev.some(
-                (msg) =>
-                  msg.timestamp === body.timestamp * 1000 &&
-                  msg.text === textMessage &&
-                  msg.sender ===
-                    (body.senderData.senderName ?? body.senderData.sender)
-              );
-
-              if (isDuplicate) return prev;
-
               return [
                 ...prev,
                 {

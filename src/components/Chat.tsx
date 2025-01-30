@@ -29,7 +29,7 @@ const Chat: React.FC<ChatProps> = ({
   }, [messages]);
 
   const handleLogout = () => {
-    localStorage.removeItem("credentials");
+    localStorage.removeItem("green_api_credentials");
     onLogout();
   };
 
