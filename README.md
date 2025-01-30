@@ -40,8 +40,10 @@ npm run docker:start
 ## Использование
 
 1. Зарегистрируйтесь на [Green API](https://green-api.com/)
-2. Получите `idInstance` и `apiTokenInstance`
-3. Используйте эти данные для входа в приложение
+2. Создайте инстанс, авторизуйтесь по номеру телефона или QR
+3. Убедитесь, что [настройки инстанса](https://green-api.com/docs/api/receiving/technology-http-api/) позволяют получать уведомления
+4. Получите `idInstance` и `apiTokenInstance`
+5. Используйте  для входа в приложение
 
 ## Основные функции
 
