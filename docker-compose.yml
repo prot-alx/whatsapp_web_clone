@@ -3,12 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - NODE_ENV=production
     container_name: whatsapp-web
-    environment:
-      - NODE_ENV=production
-      - VITE_ENV=production
     ports:
       - "3000:80"
     restart: unless-stopped
