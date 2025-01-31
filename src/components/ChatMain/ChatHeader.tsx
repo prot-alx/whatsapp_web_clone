@@ -1,23 +1,23 @@
 import React from "react";
-import { LogOut } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 interface ChatHeaderProps {
   chatId: string;
-  onLogout: () => void;
+  onBack: () => void;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ chatId, onLogout }) => {
+const ChatHeader: React.FC<ChatHeaderProps> = ({ chatId, onBack }) => {
   return (
-    <div className="chat-header">
-      <h2 className="text-xl font-semibold">Чат с {chatId || "..."}</h2>
-      <button
-        onClick={onLogout}
-        className="logout-button"
-        title="Выйти"
-      >
-        <LogOut className="w-5 h-5" />
-        <span>Выйти</span>
-      </button>
+    <div className="whatsapp-chat-header">
+      <div className="flex items-center gap-3">
+        <button onClick={onBack} className="back-to-contacts-button">
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <div className="flex items-center gap-3">
+          <div className="chat-avatar">{chatId.charAt(0).toUpperCase()}</div>
+          <h2 className="text-lg font-medium">{chatId || "..."}</h2>
+        </div>
+      </div>
     </div>
   );
 };

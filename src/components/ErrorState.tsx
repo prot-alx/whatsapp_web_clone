@@ -3,7 +3,7 @@ interface ErrorStateProps {
 }
 
 export const ErrorState: React.FC<ErrorStateProps> = ({ error }) => (
-  <div className="flex h-screen items-center justify-center">
-    <div className="text-red-600">{error}</div>
+  <div className="error-state">
+    <div>{error}</div>
   </div>
 );

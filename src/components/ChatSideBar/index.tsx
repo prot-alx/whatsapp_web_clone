@@ -1,7 +1,8 @@
-import { ChatInfo } from "../../api/interfaces";
+import { memo, useState } from "react";
 import { ChatList } from "./ChatList";
+import { NewChatForm } from "./newChatForm";
 import { SidebarHeader } from "./SidebarHeader";
-import { memo, useCallback } from "react";
+import { ChatInfo } from "../../api/interfaces";
 
 interface ChatSidebarProps {
   chats: ChatInfo[];
@@ -12,19 +13,40 @@ interface ChatSidebarProps {
 
 export const ChatSidebar: React.FC<ChatSidebarProps> = memo(
   ({ chats, selectedChat, onChatSelect, onLogout }) => {
-    const onLogoutCallback = useCallback(() => {
-      onLogout();
-    }, [onLogout]);
+    const [isNewChatOpen, setIsNewChatOpen] = useState(false);
+
+    const handleNewChat = (phoneNumber: string) => {
+      const chatId = `${phoneNumber}@c.us`;
+      onChatSelect({
+        id: chatId,
+        name: phoneNumber,
+        archive: false,
+        notSpam: false,
+        ephemeralExpiration: 0,
+        ephemeralSettingTimestamp: 0,
+      });
+    };
 
     return (
-      <div className="w-1/3 bg-white border-r border-gray-200">
-        <SidebarHeader onLogout={onLogoutCallback} />
+      <div className="h-full flex flex-col">
+        <SidebarHeader
+          onLogout={onLogout}
+          onNewChat={() => setIsNewChatOpen(true)}
+        />
         <ChatList
           chats={chats}
           selectedChat={selectedChat}
           onChatSelect={onChatSelect}
         />
+        {isNewChatOpen && (
+          <NewChatForm
+            onSubmit={handleNewChat}
+            onClose={() => setIsNewChatOpen(false)}
+          />
+        )}
       </div>
     );
   }
 );
+
+ChatSidebar.displayName = "ChatSidebar";

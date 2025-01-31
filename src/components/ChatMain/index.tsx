@@ -3,14 +3,15 @@ import { ChatInfo } from "../../api/interfaces";
 import ChatHeader from "./ChatHeader";
 import Messages, { Message } from "./Messages";
 import { ErrorState } from "../ErrorState";
+import { LoadingState } from "../LoadingState";
 
 interface ChatMainProps {
   selectedChat: ChatInfo | null;
   messages: Message[];
   messagesEndRef: React.RefObject<HTMLDivElement>;
-  onLogout: () => void;
   isLoading: boolean;
   error: string | null;
+  onBack: () => void;
 }
 
 export const ChatMain = memo(
@@ -18,44 +19,36 @@ export const ChatMain = memo(
     selectedChat,
     messages,
     messagesEndRef,
-    onLogout,
     isLoading,
     error,
+    onBack,
   }: ChatMainProps) => {
     console.log("ChatMain render");
 
     const renderChatContent = () => {
       if (isLoading) {
-        return (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-gray-600">Загрузка сообщений...</div>
-          </div>
-        );
+        return <LoadingState />;
       }
-
       if (error) {
-        return (
-          <div className="flex-1 flex items-center justify-center">
-            <ErrorState error={error} />
-          </div>
-        );
+        return <ErrorState error={error} />;
       }
-
       return <Messages messages={messages} messagesEndRef={messagesEndRef} />;
     };
 
     return (
-      <div className="flex-1 flex flex-col">
+      <div className="whatsapp-main">
         {selectedChat ? (
           <>
-            <ChatHeader
-              chatId={selectedChat.name ?? selectedChat.id.split("@")[0]}
-              onLogout={onLogout}
-            />
-            {renderChatContent()}
+            <div className="flex-none">
+              <ChatHeader
+                chatId={selectedChat.name ?? selectedChat.id.split("@")[0]}
+                onBack={onBack}
+              />
+            </div>
+            <div className="flex-1 overflow-y-auto">{renderChatContent()}</div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
+          <div className="start-chat-message">
             Выберите чат для начала общения
           </div>
         )}
