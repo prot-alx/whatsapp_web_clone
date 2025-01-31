@@ -20,16 +20,8 @@ const Login: React.FC<LoginProps> = ({ onLogin, error }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const success = await onLogin(credentials);
-      if (!success) {
-        throw new Error("Ошибка аутентификации. Проверьте данные.");
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    await onLogin(credentials);
+    setLoading(false);
   };
 
   return (

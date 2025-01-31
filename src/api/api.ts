@@ -7,16 +7,6 @@ import {
 
 const BASE_URL = "https://api.green-api.com";
 
-const handleAxiosError = (error: unknown): never => {
-  if (axios.isAxiosError(error)) {
-    if (error.response) {
-      throw new Error(error.response.statusText || "Ошибка на сервере");
-    }
-    throw new Error("Проверьте корректность вводимых данных");
-  }
-  throw new Error("Неизвестная ошибка");
-};
-
 export const sendMessage = async (
   idInstance: string,
   apiTokenInstance: string,
@@ -31,7 +21,8 @@ export const sendMessage = async (
     });
     return response.data;
   } catch (error) {
-    return handleAxiosError(error);
+    console.error("Ошибка отправки сообщения:", error);
+    throw error;
   }
 };
 
@@ -44,7 +35,8 @@ export const receiveMessage = async (
     const response = await axios.get(url);
     return response.data;
   } catch (error) {
-    return handleAxiosError(error);
+    console.error("Ошибка получения сообщения:", error);
+    return null;
   }
 };
 
@@ -57,7 +49,8 @@ export const deleteNotification = async (
     const url = `${BASE_URL}/waInstance${idInstance}/deleteNotification/${apiTokenInstance}/${receiptId}`;
     await axios.delete(url);
   } catch (error) {
-    return handleAxiosError(error);
+    console.error("Ошибка удаления уведомления:", error);
+    throw error;
   }
 };
 
@@ -67,29 +60,17 @@ export const authenticate = async (
   try {
     const { idInstance, apiTokenInstance } = credentials;
     const url = `${BASE_URL}/waInstance${idInstance}/getSettings/${apiTokenInstance}`;
-    const response = await axios.get(url);
-
-    if (response.status === 200) {
-      return { success: true, message: "Аутентификация прошла успешно" };
-    }
+    await axios.get(url);
 
     return {
-      success: false,
-      message: response.statusText || "Неизвестная ошибка",
+      success: true,
+      message: "Аутентификация прошла успешно",
     };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        return {
-          success: false,
-          message: error.response.statusText || "Ошибка на сервере",
-        };
-      }
-      return {
-        success: false,
-        message: "Проверьте корректность вводимых данных",
-      };
-    }
-    return { success: false, message: "Неизвестная ошибка" };
+    console.error("Ошибка аутентификации:", error);
+    return {
+      success: false,
+      message: "Ошибка аутентификации",
+    };
   }
 };

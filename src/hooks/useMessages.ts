@@ -43,8 +43,7 @@ export const useMessages = ({
         )
       );
       return true;
-    } catch (error) {
-      console.error("Ошибка при отправке сообщения:", error);
+    } catch {
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === messageId ? { ...msg, status: "error" as const } : msg
@@ -62,7 +61,7 @@ export const useMessages = ({
 
       if (notification && isComponentMounted.current) {
         const { body, receiptId } = notification;
-        
+
         if (body.typeWebhook === "incomingMessageReceived") {
           const textMessage = body.messageData?.textMessageData?.textMessage;
           if (textMessage) {
@@ -87,8 +86,7 @@ export const useMessages = ({
       if (isComponentMounted.current) {
         pollingTimeoutRef.current = setTimeout(processNotification, 1000);
       }
-    } catch (error) {
-      console.error("Ошибка при получении сообщений:", error);
+    } catch {
       if (isComponentMounted.current) {
         pollingTimeoutRef.current = setTimeout(processNotification, 5000);
       }

@@ -12,13 +12,16 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (credentials: Credentials): Promise<boolean> => {
-    const { success, message } = await authenticate(credentials);
-    if (success) {
-      localStorage.setItem("green_api_credentials", JSON.stringify(credentials));
+    const response = await authenticate(credentials);
+    if (response.success) {
+      localStorage.setItem(
+        "green_api_credentials",
+        JSON.stringify(credentials)
+      );
       setCredentials(credentials);
       return true;
     } else {
-      setError(message);
+      setError(response.message);
       return false;
     }
   };
