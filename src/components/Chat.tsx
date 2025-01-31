@@ -1,9 +1,19 @@
-import React, { useState, useRef, useEffect } from "react";
-import Messages from "./Messages";
-import ChatHeader from "./ChatHeader";
-import ChatInput from "./ChatInput";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import { useMessages } from "../hooks/useMessages";
-
+import { ChatInfo } from "../api/interfaces";
+import { ChatMain } from "./ChatMain";
+import { LoadingState } from "./LoadingState";
+import { ErrorState } from "./ErrorState";
+import { useChatList } from "../hooks/useChatList";
+import { ChatSidebar } from "./ChatSideBar";
+import { useChatHistory } from "../hooks/useChatHistory";
+import ChatInput from "./ChatMain/ChatInput";
 interface ChatProps {
   idInstance: string;
   apiTokenInstance: string;
@@ -16,41 +26,110 @@ const Chat: React.FC<ChatProps> = ({
   onLogout,
 }) => {
   const [newMessage, setNewMessage] = useState("");
-  const [chatId, setChatId] = useState("");
+  const [selectedChat, setSelectedChat] = useState<ChatInfo | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, sendMessage } = useMessages({
+  // Получаем список чатов
+  const {
+    chats,
+    isLoading: isChatsLoading,
+    error: chatsError,
+  } = useChatList({
     idInstance,
     apiTokenInstance,
   });
 
+  // Получаем историю выбранного чата
+  const { chatHistory, isLoading: isHistoryLoading } = useChatHistory({
+    idInstance,
+    apiTokenInstance,
+    chatId: selectedChat?.id ?? null,
+  });
+
+  // Получаем новые сообщения
+  const { messages: newMessages, sendMessage } = useMessages({
+    idInstance,
+    apiTokenInstance,
+  });
+
+  const chatId = useMemo(
+    () => selectedChat?.id.split("@")[0] ?? "",
+    [selectedChat]
+  );
+
+  // Фильтруем и объединяем сообщения
+  const allMessages = useMemo(() => {
+    if (!selectedChat) return [];
+
+    const cleanChatId = selectedChat.id.split("@")[0];
+
+    return [
+      ...chatHistory,
+      ...newMessages.filter(
+        (msg) =>
+          msg.sender === "me" ||
+          msg.sender === selectedChat.id ||
+          msg.sender === cleanChatId
+      ),
+    ].sort((a, b) => a.timestamp - b.timestamp);
+  }, [chatHistory, newMessages, selectedChat]);
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (!isHistoryLoading && messagesEndRef.current) {
+      requestAnimationFrame(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+  }, [allMessages, isHistoryLoading, selectedChat]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("green_api_credentials");
+  const handleChatSelect = useCallback((chat: ChatInfo) => {
+    setSelectedChat(chat);
+  }, []);
+
+  const handleSendMessage = useCallback(() => {
+    if (selectedChat && newMessage.trim()) {
+      sendMessage(chatId, newMessage);
+      setNewMessage("");
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [selectedChat, newMessage, chatId, sendMessage]);
+
+  const onLogoutCallback = useCallback(() => {
     onLogout();
-  };
+  }, [onLogout]);
 
-  const handleSendMessage = () => {
-    sendMessage(chatId, newMessage);
-    setNewMessage("");
-  };
+  if (isChatsLoading) {
+    return <LoadingState />;
+  }
+
+  if (chatsError) {
+    return <ErrorState error={chatsError} />;
+  }
 
   return (
-    <div className="chat-wrapper">
-      <div className="chat-container">
-        <ChatHeader chatId={chatId} onLogout={handleLogout} />
-        <Messages messages={messages} messagesEndRef={messagesEndRef} />
+    <div className="flex h-screen bg-gray-100">
+      <ChatSidebar
+        chats={chats}
+        selectedChat={selectedChat}
+        onChatSelect={handleChatSelect}
+        onLogout={onLogoutCallback}
+      />
+      <ChatMain
+        selectedChat={selectedChat}
+        messages={allMessages}
+        messagesEndRef={messagesEndRef}
+        onLogout={onLogout}
+        isLoading={isHistoryLoading}
+      />
+      {selectedChat && (
         <ChatInput
           chatId={chatId}
           newMessage={newMessage}
-          onChatIdChange={setChatId}
           onMessageChange={setNewMessage}
           onSend={handleSendMessage}
+          hidePhoneInput={true}
         />
-      </div>
+      )}
     </div>
   );
 };

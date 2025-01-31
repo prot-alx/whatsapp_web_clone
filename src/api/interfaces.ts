@@ -34,3 +34,46 @@ export interface ReceiveMessageResponse {
   receiptId: number;
   body: WebhookBody;
 }
+
+export interface ChatInfo {
+  archive: boolean;
+  id: string;
+  notSpam: boolean;
+  ephemeralExpiration: number;
+  ephemeralSettingTimestamp: number;
+  name?: string;
+  lastMessageTime?: number;
+}
+
+export interface ExtendedWebhookBody {
+  chatId: string;
+  idMessage: string;
+  timestamp: number;
+  type: "outgoing" | "incoming";
+  textMessage?: string;
+  extendedTextMessage?: {
+    text: string;
+  };
+  senderData?: {
+    sender: string;
+  };
+}
+
+export interface BaseMessage {
+  idMessage: string;
+  timestamp: number;
+  type: "outgoing" | "incoming";
+  chatId: string;
+}
+
+export interface ExtendedWebhookBody extends BaseMessage {
+  textMessage?: string;
+  extendedTextMessage?: {
+    text: string;
+  };
+  senderData?: {
+    sender: string;
+  };
+}
+
+export type ChatHistoryMessage = WebhookBody & Partial<ExtendedWebhookBody>;

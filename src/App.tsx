@@ -1,35 +1,45 @@
-import React, { useState } from "react";
+import { useState, useCallback } from "react";
 import Login from "./components/Login";
 import Chat from "./components/Chat";
 import { authenticate } from "./api/api";
 import { Credentials } from "./api/interfaces";
 
-const App: React.FC = () => {
-  const [credentials, setCredentials] = useState<Credentials | null>(() => {
-    const savedCredentials = localStorage.getItem("green_api_credentials");
+const STORAGE_KEY = "green_api_credentials";
+
+const getStoredCredentials = (): Credentials | null => {
+  try {
+    const savedCredentials = localStorage.getItem(STORAGE_KEY);
     return savedCredentials ? JSON.parse(savedCredentials) : null;
-  });
+  } catch {
+    return null;
+  }
+};
+
+const App = () => {
+  const [credentials, setCredentials] = useState<Credentials | null>(
+    getStoredCredentials
+  );
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = async (credentials: Credentials): Promise<boolean> => {
-    const response = await authenticate(credentials);
-    if (response.success) {
-      localStorage.setItem(
-        "green_api_credentials",
-        JSON.stringify(credentials)
-      );
-      setCredentials(credentials);
-      return true;
-    } else {
+  const handleLogin = useCallback(
+    async (newCredentials: Credentials): Promise<boolean> => {
+      const response = await authenticate(newCredentials);
+      if (response.success) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newCredentials));
+        setCredentials(newCredentials);
+        setError(null);
+        return true;
+      }
       setError(response.message);
       return false;
-    }
-  };
+    },
+    []
+  );
 
-  const handleLogout = () => {
-    localStorage.removeItem("green_api_credentials");
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY);
     setCredentials(null);
-  };
+  }, []);
 
   return (
     <div>
