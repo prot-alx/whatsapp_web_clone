@@ -1,19 +1,13 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
-import { useMessages } from "../hooks/useMessages";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useChatList } from "../hooks/useChatList";
+import { useChatMessages } from "../hooks/useChatMessages";
 import { ChatInfo } from "../api/interfaces";
 import { ChatMain } from "./ChatMain";
 import { LoadingState } from "./LoadingState";
 import { ErrorState } from "./ErrorState";
-import { useChatList } from "../hooks/useChatList";
 import { ChatSidebar } from "./ChatSideBar";
-import { useChatHistory } from "../hooks/useChatHistory";
 import ChatInput from "./ChatMain/ChatInput";
+
 interface ChatProps {
   idInstance: string;
   apiTokenInstance: string;
@@ -29,7 +23,6 @@ const Chat: React.FC<ChatProps> = ({
   const [selectedChat, setSelectedChat] = useState<ChatInfo | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Получаем список чатов
   const {
     chats,
     isLoading: isChatsLoading,
@@ -39,91 +32,63 @@ const Chat: React.FC<ChatProps> = ({
     apiTokenInstance,
   });
 
-  // Получаем историю выбранного чата
-  const { chatHistory, isLoading: isHistoryLoading } = useChatHistory({
+  const chatId = selectedChat?.id ?? null;
+  const {
+    messages,
+    isLoading: isMessagesLoading,
+    error: messagesError,
+    sendMessage,
+  } = useChatMessages({
     idInstance,
     apiTokenInstance,
-    chatId: selectedChat?.id ?? null,
+    chatId,
   });
 
-  // Получаем новые сообщения
-  const { messages: newMessages, sendMessage } = useMessages({
-    idInstance,
-    apiTokenInstance,
-  });
-
-  const chatId = useMemo(
-    () => selectedChat?.id.split("@")[0] ?? "",
-    [selectedChat]
-  );
-
-  // Фильтруем и объединяем сообщения
-  const allMessages = useMemo(() => {
-    if (!selectedChat) return [];
-
-    const cleanChatId = selectedChat.id.split("@")[0];
-
-    return [
-      ...chatHistory,
-      ...newMessages.filter(
-        (msg) =>
-          msg.sender === "me" ||
-          msg.sender === selectedChat.id ||
-          msg.sender === cleanChatId
-      ),
-    ].sort((a, b) => a.timestamp - b.timestamp);
-  }, [chatHistory, newMessages, selectedChat]);
-
+  // Скролл к последнему сообщению
   useEffect(() => {
-    if (!isHistoryLoading && messagesEndRef.current) {
+    if (!isMessagesLoading && messagesEndRef.current) {
       requestAnimationFrame(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
       });
     }
-  }, [allMessages, isHistoryLoading, selectedChat]);
+  }, [messages, isMessagesLoading, chatId]);
 
-  const handleChatSelect = useCallback((chat: ChatInfo) => {
-    setSelectedChat(chat);
-  }, []);
-
-  const handleSendMessage = useCallback(() => {
+  const handleSendMessage = useCallback(async () => {
     if (selectedChat && newMessage.trim()) {
-      sendMessage(chatId, newMessage);
-      setNewMessage("");
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      const success = await sendMessage(newMessage);
+      if (success) {
+        setNewMessage("");
+      }
     }
-  }, [selectedChat, newMessage, chatId, sendMessage]);
-
-  const onLogoutCallback = useCallback(() => {
-    onLogout();
-  }, [onLogout]);
+  }, [selectedChat, newMessage, sendMessage]);
 
   if (isChatsLoading) {
     return <LoadingState />;
   }
 
-  if (chatsError) {
-    return <ErrorState error={chatsError} />;
-  }
-
   return (
     <div className="flex h-screen bg-gray-100">
-      <ChatSidebar
-        chats={chats}
-        selectedChat={selectedChat}
-        onChatSelect={handleChatSelect}
-        onLogout={onLogoutCallback}
-      />
+      {chatsError ? (
+        <ErrorState error={chatsError} />
+      ) : (
+        <ChatSidebar
+          chats={chats}
+          selectedChat={selectedChat}
+          onChatSelect={setSelectedChat}
+          onLogout={onLogout}
+        />
+      )}
       <ChatMain
         selectedChat={selectedChat}
-        messages={allMessages}
+        messages={messages}
         messagesEndRef={messagesEndRef}
         onLogout={onLogout}
-        isLoading={isHistoryLoading}
+        isLoading={isMessagesLoading}
+        error={messagesError}
       />
       {selectedChat && (
         <ChatInput
-          chatId={chatId}
+          chatId={selectedChat.id.split("@")[0]}
           newMessage={newMessage}
           onMessageChange={setNewMessage}
           onSend={handleSendMessage}

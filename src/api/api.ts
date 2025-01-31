@@ -18,19 +18,8 @@ export const sendMessage = async (
     const { idInstance, apiTokenInstance } = credentials;
     const url = `${BASE_URL}/waInstance${idInstance}/sendMessage/${apiTokenInstance}`;
 
-    // Подробное логирование данных запроса
-    console.log("Отправка сообщения - полные данные:", {
-      url,
-      requestBody: {
-        chatId: `${chatId}@c.us`,
-        message,
-      },
-      originalChatId: chatId,
-      containsSuffix: chatId.includes("@c.us"),
-    });
-
     const response = await axios.post<SendMessageResponse>(url, {
-      chatId: `${chatId}@c.us`,
+      chatId: `${chatId}`,
       message,
     });
     return response.data;
