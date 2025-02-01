@@ -1,8 +1,6 @@
 import { memo, useState } from "react";
 import { ChatInfo } from "../../api/interfaces";
-import ChatList from "./ChatList";
-import NewChatForm from "./newChatForm";
-import SidebarHeader from "./SidebarHeader";
+import { ChatList, NewChatForm, SidebarHeader } from ".";
 
 interface ChatSidebarProps {
   chats: ChatInfo[];
@@ -11,7 +9,7 @@ interface ChatSidebarProps {
   onLogout: () => void;
 }
 
-export const ChatSidebar: React.FC<ChatSidebarProps> = memo(
+const ChatSidebar: React.FC<ChatSidebarProps> = memo(
   ({ chats, selectedChat, onChatSelect, onLogout }) => {
     console.log("ChatSideBar render");
     const [isNewChatOpen, setIsNewChatOpen] = useState(false);
@@ -51,3 +49,4 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = memo(
 );
 
 ChatSidebar.displayName = "ChatSidebar";
+export default ChatSidebar;

@@ -2,12 +2,9 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useChatList } from "../hooks/useChatList";
 import { useChatMessages } from "../hooks/useChatMessages";
 import { ChatInfo } from "../api/interfaces";
+import { ErrorState, LoadingState } from ".";
 import { ChatSidebar } from "./ChatSideBar";
-import ChatInput from "./ChatMain/ChatInput";
-import ChatHeader from "./ChatMain/ChatHeader";
-import ChatMain from "./ChatMain";
-import LoadingState from "./LoadingState";
-import ErrorState from "./ErrorState";
+import { ChatHeader, ChatInput, ChatMain } from "./ChatMain";
 
 interface ChatProps {
   idInstance: string;

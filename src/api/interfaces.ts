@@ -45,20 +45,6 @@ export interface ChatInfo {
   lastMessageTime?: number;
 }
 
-export interface ExtendedWebhookBody {
-  chatId: string;
-  idMessage: string;
-  timestamp: number;
-  type: "outgoing" | "incoming";
-  textMessage?: string;
-  extendedTextMessage?: {
-    text: string;
-  };
-  senderData?: {
-    sender: string;
-  };
-}
-
 export interface BaseMessage {
   idMessage: string;
   timestamp: number;

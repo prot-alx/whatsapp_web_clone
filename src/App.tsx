@@ -1,8 +1,7 @@
 import { useState, useCallback } from "react";
 import { authenticate } from "./api/api";
 import { Credentials } from "./api/interfaces";
-import Login from "./components/Login";
-import Chat from "./components/Chat";
+import { Chat, Login } from "./components";
 
 const STORAGE_KEY = "green_api_credentials";
 

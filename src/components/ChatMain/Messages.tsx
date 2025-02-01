@@ -1,13 +1,6 @@
 import React, { memo } from "react";
 import { Clock, CheckCircle2, XCircle } from "lucide-react";
-
-export interface Message {
-  id: string;
-  sender: string;
-  text: string;
-  timestamp: number;
-  status: "sending" | "sent" | "error";
-}
+import { Message } from "../../hooks/types";
 
 interface MessagesProps {
   messages: Message[];

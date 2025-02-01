@@ -1,9 +1,8 @@
 import { memo } from "react";
 import { ChatInfo } from "../../api/interfaces";
-import Messages, { Message } from "./Messages";
-import ErrorState from "../ErrorState";
-import LoadingState from "../LoadingState";
-
+import { Message } from "../../hooks/types";
+import { ErrorState, LoadingState } from "..";
+import { Messages } from ".";
 
 interface ChatMainProps {
   selectedChat: ChatInfo | null;
