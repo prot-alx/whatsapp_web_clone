@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { X } from "lucide-react";
 
 interface NewChatFormProps {
@@ -10,6 +10,11 @@ const NewChatForm: React.FC<NewChatFormProps> = ({ onSubmit, onClose }) => {
   console.log("NewChatForm render");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,8 +45,18 @@ const NewChatForm: React.FC<NewChatFormProps> = ({ onSubmit, onClose }) => {
     [onClose]
   );
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      onClose();
+    }
+  };
+
   return (
-    <div className="whatsapp-modal-overlay" onClick={handleOverlayClick}>
+    <div
+      className="whatsapp-modal-overlay"
+      onClick={handleOverlayClick}
+      onKeyDown={handleKeyDown}
+    >
       <div className="whatsapp-new-chat-form">
         <div className="whatsapp-new-chat-header">
           <h3 className="text-lg font-medium">Новый чат</h3>
@@ -58,6 +73,7 @@ const NewChatForm: React.FC<NewChatFormProps> = ({ onSubmit, onClose }) => {
             <input
               id="phoneNumber"
               type="tel"
+              ref={inputRef}
               value={phoneNumber}
               onChange={handlePhoneChange}
               placeholder="79991234567"
