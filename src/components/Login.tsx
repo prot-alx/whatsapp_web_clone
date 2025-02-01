@@ -7,6 +7,7 @@ interface LoginProps {
 }
 
 const Login = ({ onLogin, error }: LoginProps) => {
+  console.log('Login render');
   const [credentials, setCredentials] = useState<Credentials>(() => ({
     idInstance: "",
     apiTokenInstance: "",

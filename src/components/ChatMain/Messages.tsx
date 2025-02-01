@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Clock, CheckCircle2, XCircle } from "lucide-react";
 
 export interface Message {
@@ -27,7 +27,8 @@ const MessageStatus: React.FC<{ status: Message["status"] }> = ({ status }) => {
   }
 };
 
-const Messages: React.FC<MessagesProps> = ({ messages, messagesEndRef }) => {
+const Messages = memo(({ messages, messagesEndRef }: MessagesProps) => {
+  console.log("Messages render");
   return (
     <div className="messages-container">
       {messages.map((msg) => (
@@ -62,6 +63,6 @@ const Messages: React.FC<MessagesProps> = ({ messages, messagesEndRef }) => {
       <div ref={messagesEndRef} />
     </div>
   );
-};
+});
 
 export default Messages;

@@ -6,10 +6,8 @@ interface NewChatFormProps {
   onClose: () => void;
 }
 
-export const NewChatForm: React.FC<NewChatFormProps> = ({
-  onSubmit,
-  onClose,
-}) => {
+const NewChatForm: React.FC<NewChatFormProps> = ({ onSubmit, onClose }) => {
+  console.log("NewChatForm render");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
 
@@ -89,3 +87,5 @@ export const NewChatForm: React.FC<NewChatFormProps> = ({
     </div>
   );
 };
+
+export default NewChatForm;

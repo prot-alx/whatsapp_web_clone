@@ -2,11 +2,12 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useChatList } from "../hooks/useChatList";
 import { useChatMessages } from "../hooks/useChatMessages";
 import { ChatInfo } from "../api/interfaces";
-import { ChatMain } from "./ChatMain";
-import { LoadingState } from "./LoadingState";
-import { ErrorState } from "./ErrorState";
 import { ChatSidebar } from "./ChatSideBar";
 import ChatInput from "./ChatMain/ChatInput";
+import ChatHeader from "./ChatMain/ChatHeader";
+import ChatMain from "./ChatMain";
+import LoadingState from "./LoadingState";
+import ErrorState from "./ErrorState";
 
 interface ChatProps {
   idInstance: string;
@@ -19,7 +20,6 @@ const Chat: React.FC<ChatProps> = ({
   apiTokenInstance,
   onLogout,
 }) => {
-  const [newMessage, setNewMessage] = useState("");
   const [selectedChat, setSelectedChat] = useState<ChatInfo | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -53,18 +53,18 @@ const Chat: React.FC<ChatProps> = ({
     }
   }, [messages, isMessagesLoading, chatId]);
 
-  const handleSendMessage = useCallback(async () => {
-    if (selectedChat && newMessage.trim()) {
-      const success = await sendMessage(newMessage);
-      if (success) {
-        setNewMessage("");
+  const handleSendMessage = useCallback(
+    async (message: string) => {
+      if (selectedChat) {
+        await sendMessage(message);
       }
-    }
-  }, [selectedChat, newMessage, sendMessage]);
+    },
+    [selectedChat, sendMessage]
+  );
 
-  const handleBackToList = () => {
+  const handleBackToList = useCallback(() => {
     setSelectedChat(null);
-  };
+  }, []);
 
   if (isChatsLoading) {
     return <LoadingState />;
@@ -72,9 +72,7 @@ const Chat: React.FC<ChatProps> = ({
 
   return (
     <div className="whatsapp-container h-screen bg-whatsapp-background">
-      {/* Основной контейнер */}
       <div className="whatsapp-layout w-full h-full flex relative">
-        {/* Сайдбар (всегда виден на десктопе, на мобильном скрыт при выборе чата) */}
         <div
           className={`whatsapp-sidebar w-full md:w-[400px] bg-white md:rounded-l-lg
             ${selectedChat ? "hidden md:block" : "block"}`}
@@ -91,26 +89,24 @@ const Chat: React.FC<ChatProps> = ({
           )}
         </div>
 
-        {/* Основная часть с чатом (на мобильном появляется при выборе чата) */}
         <div
           className={`whatsapp-main-content relative flex-1 flex flex-col bg-white md:rounded-r-lg
             ${selectedChat ? "block" : "hidden md:block"}`}
         >
           {selectedChat ? (
             <>
+              <ChatHeader
+                chatId={selectedChat.name ?? selectedChat.id.split("@")[0]}
+                onBack={handleBackToList}
+              />
               <ChatMain
                 selectedChat={selectedChat}
                 messages={messages}
                 messagesEndRef={messagesEndRef}
                 isLoading={isMessagesLoading}
                 error={messagesError}
-                onBack={handleBackToList}
               />
-              <ChatInput
-                newMessage={newMessage}
-                onMessageChange={setNewMessage}
-                onSend={handleSendMessage}
-              />
+              <ChatInput onSend={handleSendMessage} />
             </>
           ) : (
             <div className="whatsapp-empty-state flex items-center justify-center h-full">

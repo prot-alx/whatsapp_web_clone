@@ -1,9 +1,9 @@
 import { memo } from "react";
 import { ChatInfo } from "../../api/interfaces";
-import ChatHeader from "./ChatHeader";
 import Messages, { Message } from "./Messages";
-import { ErrorState } from "../ErrorState";
-import { LoadingState } from "../LoadingState";
+import ErrorState from "../ErrorState";
+import LoadingState from "../LoadingState";
+
 
 interface ChatMainProps {
   selectedChat: ChatInfo | null;
@@ -11,17 +11,15 @@ interface ChatMainProps {
   messagesEndRef: React.RefObject<HTMLDivElement>;
   isLoading: boolean;
   error: string | null;
-  onBack: () => void;
 }
 
-export const ChatMain = memo(
+const ChatMain = memo(
   ({
     selectedChat,
     messages,
     messagesEndRef,
     isLoading,
     error,
-    onBack,
   }: ChatMainProps) => {
     console.log("ChatMain render");
 
@@ -38,15 +36,7 @@ export const ChatMain = memo(
     return (
       <div className="whatsapp-main">
         {selectedChat ? (
-          <>
-            <div className="flex-none">
-              <ChatHeader
-                chatId={selectedChat.name ?? selectedChat.id.split("@")[0]}
-                onBack={onBack}
-              />
-            </div>
-            <div className="flex-1 overflow-y-auto">{renderChatContent()}</div>
-          </>
+          <div className="flex-1 overflow-y-auto">{renderChatContent()}</div>
         ) : (
           <div className="start-chat-message">
             Выберите чат для начала общения
@@ -58,3 +48,4 @@ export const ChatMain = memo(
 );
 
 ChatMain.displayName = "ChatMain";
+export default ChatMain;

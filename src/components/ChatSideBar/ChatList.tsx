@@ -8,11 +8,12 @@ interface ChatListProps {
   onChatSelect: (chat: ChatInfo) => void;
 }
 
-export const ChatList: React.FC<ChatListProps> = ({
+const ChatList: React.FC<ChatListProps> = ({
   chats,
   selectedChat,
   onChatSelect,
 }) => {
+  console.log("ChatList render");
   const getInitials = (chat: ChatInfo) => {
     const name = chat.name ?? chat.id.split("@")[0];
     return name.charAt(0).toUpperCase();
@@ -54,3 +55,5 @@ export const ChatList: React.FC<ChatListProps> = ({
     </div>
   );
 };
+
+export default ChatList;

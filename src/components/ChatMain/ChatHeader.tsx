@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { ChevronLeft } from "lucide-react";
 
 interface ChatHeaderProps {
@@ -6,7 +6,8 @@ interface ChatHeaderProps {
   onBack: () => void;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ chatId, onBack }) => {
+const ChatHeader = memo(({ chatId, onBack }: ChatHeaderProps) => {
+  console.log("ChatHeader render");
   return (
     <div className="whatsapp-chat-header">
       <div className="flex items-center gap-3">
@@ -20,6 +21,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ chatId, onBack }) => {
       </div>
     </div>
   );
-};
+});
 
+ChatHeader.displayName = "ChatHeader";
 export default ChatHeader;

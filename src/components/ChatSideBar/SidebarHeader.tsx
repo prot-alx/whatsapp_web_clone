@@ -5,10 +5,11 @@ export interface SidebarHeaderProps {
   onNewChat: () => void;
 }
 
-export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
+const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   onLogout,
   onNewChat,
 }) => {
+  console.log("SidebarHeader render");
   return (
     <div className="whatsapp-sidebar-header">
       <div className="whatsapp-user-info">
@@ -37,3 +38,5 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
     </div>
   );
 };
+
+export default SidebarHeader;
