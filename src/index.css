@@ -47,7 +47,8 @@
 }
 
 .login-link {
-  @apply text-center text-sm hover:text-whatsapp-dark-green transition-colors duration-200;
+  @apply text-center text-sm hover:text-whatsapp-dark-green 
+    transition-colors duration-200;
 }
 
 .messages-container {
@@ -92,7 +93,7 @@
 
 .whatsapp-chat-item {
   @apply w-full flex items-center gap-3 px-4 py-3 border-b border-gray-100 
-  hover:bg-gray-50 transition-colors
+  hover:bg-gray-300 transition-colors
 }
 
 .back-to-contacts-button {
@@ -100,7 +101,8 @@
 }
 
 .chat-avatar {
-  @apply w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-whatsapp-dark-green text-lg font-medium
+  @apply w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center 
+    text-whatsapp-dark-green text-lg font-medium
 }
 
 .whatsapp-input-container {
@@ -108,11 +110,13 @@
 }
 
 .whatsapp-message-input {
-  @apply flex-1 p-2 rounded-full border border-gray-300 focus:outline-none focus:border-whatsapp-green
+  @apply flex-1 p-2 rounded-full border border-gray-300 focus:outline-none 
+    focus:border-whatsapp-green
 }
 
 .whatsapp-send-button {
-  @apply p-2 rounded-full bg-whatsapp-green text-white hover:bg-whatsapp-dark-green transition-colors
+  @apply p-2 rounded-full bg-whatsapp-green text-white 
+    hover:bg-whatsapp-dark-green transition-colors
 }
 
 .whatsapp-main {
@@ -128,7 +132,8 @@
 }
 
 .whatsapp-avatar {
-  @apply  flex-shrink-0 w-12 h-12 rounded-full bg-whatsapp-green/10 flex items-center justify-center text-whatsapp-dark-green text-lg font-medium
+  @apply flex-shrink-0 w-12 h-12 rounded-full bg-whatsapp-green/10 flex 
+    items-center justify-center text-whatsapp-dark-green text-lg font-medium
 }
 
 .whatsapp-chat-info {
@@ -152,7 +157,8 @@
 }
 
 .whatsapp-new-chat-header {
-  @apply flex items-center justify-between p-4 bg-whatsapp-dark-green text-white md:rounded-t-lg
+  @apply flex items-center justify-between p-4 bg-whatsapp-dark-green 
+    text-white md:rounded-t-lg
 }
 
 .whatsapp-close-btn {
@@ -164,19 +170,23 @@
 }
 
 .whatsapp-phone-input {
-  @apply w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-transparent
+  @apply w-full p-2 border rounded-lg focus:outline-none focus:ring-2 
+    focus:ring-whatsapp-green focus:border-transparent
 }
 
 .whatsapp-cancel-btn {
-  @apply px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors
+  @apply px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg 
+    transition-colors
 }
 
 .whatsapp-submit-btn {
-  @apply px-4 py-2 bg-whatsapp-green text-white rounded-lg hover:bg-whatsapp-dark-green transition-colors
+  @apply px-4 py-2 bg-whatsapp-green text-white rounded-lg 
+    hover:bg-whatsapp-dark-green transition-colors
 }
 
 .whatsapp-sidebar-header {
-  @apply flex items-center justify-between p-4 bg-whatsapp-dark-green text-white h-16
+  @apply flex items-center justify-between p-4 bg-whatsapp-dark-green 
+    text-white h-16
 }
 
 .whatsapp-user-info {
@@ -196,9 +206,26 @@
 }
 
 .whatsapp-modal-overlay {
-  @apply fixed inset-0 flex items-start justify-center pt-10 z-50 bg-black/50 overflow-y-auto
+  @apply fixed inset-0 flex items-start justify-center pt-10 z-50 
+    bg-black/50 overflow-y-auto
 }
 
 .whatsapp-new-chat-form {
   @apply bg-white w-full max-w-md rounded-lg mb-10 max-h-[262px] mx-auto
+}
+
+.whatsapp-container {
+  @apply h-screen bg-whatsapp-background
+}
+
+.whatsapp-layout {
+  @apply w-full h-full flex relative
+}
+
+.whatsapp-sidebar {
+  @apply w-full md:w-[400px] bg-white md:rounded-l-lg
+}
+
+.whatsapp-empty-state {
+  @apply flex items-center justify-center h-full text-gray-500
 }

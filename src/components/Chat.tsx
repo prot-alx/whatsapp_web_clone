@@ -67,11 +67,13 @@ const Chat: React.FC<ChatProps> = ({
     return <LoadingState />;
   }
 
+  console.log(selectedChat)
+
   return (
-    <div className="whatsapp-container h-screen bg-whatsapp-background">
-      <div className="whatsapp-layout w-full h-full flex relative">
+    <div className="whatsapp-container">
+      <div className="whatsapp-layout">
         <div
-          className={`whatsapp-sidebar w-full md:w-[400px] bg-white md:rounded-l-lg
+          className={`whatsapp-sidebar
             ${selectedChat ? "hidden md:block" : "block"}`}
         >
           {chatsError ? (
@@ -103,11 +105,11 @@ const Chat: React.FC<ChatProps> = ({
                 isLoading={isMessagesLoading}
                 error={messagesError}
               />
-              <ChatInput onSend={handleSendMessage} />
+              <ChatInput key={selectedChat.id} onSend={handleSendMessage} />
             </>
           ) : (
-            <div className="whatsapp-empty-state flex items-center justify-center h-full">
-              <p className="text-gray-500">Выберите чат для начала общения</p>
+            <div className="whatsapp-empty-state">
+              <p>Выберите чат для начала общения</p>
             </div>
           )}
         </div>

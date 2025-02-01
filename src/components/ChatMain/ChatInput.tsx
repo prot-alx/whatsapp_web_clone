@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from "react";
+import { memo, useState, useCallback, useRef, useEffect } from "react";
 import { Send } from "lucide-react";
 
 interface ChatInputProps {
@@ -6,8 +6,10 @@ interface ChatInputProps {
 }
 
 const ChatInput = memo(({ onSend }: ChatInputProps) => {
-  console.log('ChatInput render');
+  console.log("ChatInput render");
   const [newMessage, setNewMessage] = useState("");
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = useCallback(() => {
     if (newMessage.trim()) {
@@ -16,10 +18,15 @@ const ChatInput = memo(({ onSend }: ChatInputProps) => {
     }
   }, [newMessage, onSend]);
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  });
+
   return (
     <div className="whatsapp-input-container">
       <div className="flex gap-2 items-center">
         <input
+          ref={inputRef}
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}

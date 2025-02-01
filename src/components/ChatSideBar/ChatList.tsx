@@ -25,7 +25,7 @@ const ChatList: React.FC<ChatListProps> = ({
           key={chat.id}
           onClick={() => onChatSelect(chat)}
           className={`whatsapp-chat-item ${
-            selectedChat?.id === chat.id ? "bg-gray-100" : ""
+            selectedChat?.id === chat.id ? "bg-gray-200" : ""
           }`}
           aria-pressed={selectedChat?.id === chat.id}
         >
