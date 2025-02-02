@@ -56,7 +56,7 @@ export const receiveMessage = async (
     return response.data;
   } catch (error) {
     if (axios.isCancel(error)) {
-      // Просто возвращаем null при отмене запроса
+      // Возвращаем null при отмене запроса
       return null;
     }
 
@@ -86,7 +86,7 @@ export const deleteNotification = async (
     });
   } catch (error) {
     if (axios.isCancel(error)) {
-      // При отмене запроса не выбрасываем ошибку
+      // При отмене запроса не выбрасываем ошибку, т.к. сами его отменили
       return;
     }
 

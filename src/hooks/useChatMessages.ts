@@ -66,7 +66,7 @@ export const useChatMessages = ({
           error: "Загрузка истории... (2 сек)",
         }));
 
-        // Повторный запрос через 2 секунды
+        // Повторный запрос через 2 секунды в случае ошибки
         setTimeout(() => {
           loadHistory();
         }, 2000);
@@ -125,7 +125,7 @@ export const useChatMessages = ({
   useEffect(() => {
     let isSubscribed = true;
     let pollingTimeout: number | null = null;
-    // Создаем контроллер для отмены запросов
+    // Контроллер для отмены запросов
     const abortController = new AbortController();
 
     const processNotification = async () => {
