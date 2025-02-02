@@ -42,14 +42,24 @@ export const sendMessage = async (
 };
 
 export const receiveMessage = async (
-  credentials: Credentials
+  credentials: Credentials,
+  options?: { signal?: AbortSignal }
 ): Promise<ReceiveMessageResponse | null> => {
   try {
     const { idInstance, apiTokenInstance } = credentials;
-    const url = `${BASE_URL}/waInstance${idInstance}/receiveNotification/${apiTokenInstance}?receiveTimeout=20`;
-    const response = await axios.get<ReceiveMessageResponse>(url);
+    const url = `${BASE_URL}/waInstance${idInstance}/receiveNotification/${apiTokenInstance}?receiveTimeout=5`;
+
+    const response = await axios.get<ReceiveMessageResponse>(url, {
+      signal: options?.signal,
+    });
+
     return response.data;
   } catch (error) {
+    if (axios.isCancel(error)) {
+      // Просто возвращаем null при отмене запроса
+      return null;
+    }
+
     if (axios.isAxiosError(error)) {
       console.error(
         "Ошибка получения сообщения:",
@@ -64,13 +74,22 @@ export const receiveMessage = async (
 
 export const deleteNotification = async (
   credentials: Credentials,
-  receiptId: number
+  receiptId: number,
+  options?: { signal?: AbortSignal }
 ): Promise<void> => {
   try {
     const { idInstance, apiTokenInstance } = credentials;
     const url = `${BASE_URL}/waInstance${idInstance}/deleteNotification/${apiTokenInstance}/${receiptId}`;
-    await axios.delete(url);
+
+    await axios.delete(url, {
+      signal: options?.signal,
+    });
   } catch (error) {
+    if (axios.isCancel(error)) {
+      // При отмене запроса не выбрасываем ошибку
+      return;
+    }
+
     if (axios.isAxiosError(error)) {
       throw new Error(
         `Ошибка удаления уведомления: ${

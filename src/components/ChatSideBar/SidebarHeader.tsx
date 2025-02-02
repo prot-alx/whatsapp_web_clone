@@ -13,10 +13,7 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   return (
     <div className="whatsapp-sidebar-header">
       <div className="whatsapp-user-info">
-        <div className="whatsapp-sidebar-avatar">
-          <span className="text-lg font-medium">A</span>
-        </div>
-        <span className="font-medium">WhatsApp</span>
+        <span className="font-bold">Чаты</span>
       </div>
 
       <div className="flex items-center gap-2">

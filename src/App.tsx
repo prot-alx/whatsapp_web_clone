@@ -41,7 +41,7 @@ const App = () => {
   }, []);
 
   return (
-    <div>
+    <div className="main-wrapper">
       {!credentials ? (
         <Login onLogin={handleLogin} error={error} />
       ) : (

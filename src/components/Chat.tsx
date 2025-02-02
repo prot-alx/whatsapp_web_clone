@@ -89,7 +89,7 @@ const Chat: React.FC<ChatProps> = ({
         </div>
 
         <div
-          className={`whatsapp-main-content relative flex-1 flex flex-col bg-white md:rounded-r-lg
+          className={`whatsapp-main-content relative flex-1 flex flex-col h-full bg-white md:rounded-r-lg
             ${selectedChat ? "block" : "hidden md:block"}`}
         >
           {selectedChat ? (

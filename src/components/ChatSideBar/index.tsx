@@ -27,7 +27,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = memo(
     };
 
     return (
-      <div className="h-full flex flex-col">
+      <div className="flex flex-col">
         <SidebarHeader
           onLogout={onLogout}
           onNewChat={() => setIsNewChatOpen(true)}

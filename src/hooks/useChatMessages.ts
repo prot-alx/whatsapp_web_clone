@@ -59,12 +59,24 @@ export const useChatMessages = ({
         messages: formattedHistory,
         isLoading: false,
       }));
-    } catch {
-      setState((prev) => ({
-        ...prev,
-        error: "Не удалось загрузить историю чата",
-        isLoading: false,
-      }));
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("429")) {
+        setState((prev) => ({
+          ...prev,
+          error: "Загрузка истории... (2 сек)",
+        }));
+
+        // Повторный запрос через 2 секунды
+        setTimeout(() => {
+          loadHistory();
+        }, 2000);
+      } else {
+        setState((prev) => ({
+          ...prev,
+          error: "Не удалось загрузить историю чата",
+          isLoading: false,
+        }));
+      }
     }
   }, [idInstance, apiTokenInstance, chatId]);
 
@@ -113,15 +125,21 @@ export const useChatMessages = ({
   useEffect(() => {
     let isSubscribed = true;
     let pollingTimeout: number | null = null;
+    // Создаем контроллер для отмены запросов
+    const abortController = new AbortController();
 
     const processNotification = async () => {
-      if (!idInstance || !apiTokenInstance) return;
+      if (!idInstance || !apiTokenInstance || !isSubscribed) return;
 
       try {
-        const notification = await receiveMessage({
-          idInstance,
-          apiTokenInstance,
-        });
+        const notification = await receiveMessage(
+          {
+            idInstance,
+            apiTokenInstance,
+          },
+          // Передаем signal в запрос
+          { signal: abortController.signal }
+        );
 
         if (notification && isSubscribed) {
           const { body, receiptId } = notification;
@@ -147,12 +165,23 @@ export const useChatMessages = ({
             }
           }
 
-          await deleteNotification({ idInstance, apiTokenInstance }, receiptId);
+          await deleteNotification(
+            { idInstance, apiTokenInstance },
+            receiptId,
+            // Также передаем signal в запрос удаления уведомления
+            { signal: abortController.signal }
+          );
         }
 
-        pollingTimeout = setTimeout(processNotification, 1000);
-      } catch {
-        pollingTimeout = setTimeout(processNotification, 5000);
+        if (isSubscribed) {
+          processNotification();
+        }
+      } catch (error) {
+        // Проверяем не была ли ошибка вызвана отменой запроса
+        if (error instanceof Error && error.name === "AbortError") {
+          return;
+        }
+        pollingTimeout = setTimeout(processNotification, 10000);
       }
     };
 
@@ -164,9 +193,10 @@ export const useChatMessages = ({
     return () => {
       isSubscribed = false;
       if (pollingTimeout) clearTimeout(pollingTimeout);
+      // Отменяем все запросы при размонтировании или изменении chatId
+      abortController.abort();
     };
   }, [idInstance, apiTokenInstance, chatId, loadHistory]);
-
   return {
     messages: state.messages,
     isLoading: state.isLoading,

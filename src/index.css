@@ -6,10 +6,29 @@
   --color-whatsapp-light-green: #25d366;
   --color-whatsapp-bubble: #dcf8c6;
   --color-whatsapp-background: #ece5dd;
+  --color-whatsapp-background-stripe: #00a884;
+  --color-whatsapp-chat-background: #F7F5F3;
+}
+
+html {
+  @apply relative bg-whatsapp-background m-0 p-0;
+}
+
+html::before {
+  content: "";
+  @apply absolute top-0 left-0 w-full h-[200px] bg-whatsapp-background-stripe;
+}
+
+.main-wrapper {
+  @apply w-full h-screen 2xl:h-[calc(100vh-40px)] 2xl:mx-auto 2xl:my-[20px] max-w-[1536px];
+}
+
+.whatsapp-container {
+  @apply h-full;
 }
 
 .login-container {
-  @apply min-h-screen flex items-center justify-center bg-whatsapp-background;
+  @apply flex items-center justify-center bg-whatsapp-background  h-full;
 }
 
 .login-card {
@@ -80,11 +99,11 @@
 }
 
 .error-state {
-  @apply flex h-screen items-center justify-center text-red-600 text-sm mt-2.5
+  @apply flex items-center justify-center text-red-600 text-sm mt-2.5 h-full
 }
 
 .loading-state {
-  @apply flex h-screen items-center justify-center text-gray-600 text-sm mt-2.5
+  @apply flex items-center justify-center text-gray-600 text-sm mt-2.5 h-full
 }
 
 .whatsapp-chat-header {
@@ -120,7 +139,7 @@
 }
 
 .whatsapp-main {
-  @apply flex-1 flex flex-col h-[calc(100vh-144px)] bg-whatsapp-background
+  @apply flex flex-col bg-whatsapp-chat-background flex-1 h-full overflow-hidden
 }
 
 .start-chat-message {
@@ -128,7 +147,7 @@
 }
 
 .whatsapp-chat-list {
-  @apply overflow-y-auto h-[calc(100vh-64px)] mt-16
+  @apply overflow-y-auto mt-10
 }
 
 .whatsapp-avatar {
@@ -193,10 +212,6 @@
   @apply flex items-center gap-2
 }
 
-.whatsapp-sidebar-avatar {
-  @apply w-10 h-10 rounded-full bg-white/10 flex items-center justify-center
-}
-
 .whatsapp-new-chat-btn {
   @apply p-2 hover:bg-whatsapp-green rounded-full transition-colors
 }
@@ -214,10 +229,6 @@
   @apply bg-white w-full max-w-md rounded-lg mb-10 max-h-[262px] mx-auto
 }
 
-.whatsapp-container {
-  @apply h-screen bg-whatsapp-background
-}
-
 .whatsapp-layout {
   @apply w-full h-full flex relative
 }
@@ -227,5 +238,5 @@
 }
 
 .whatsapp-empty-state {
-  @apply flex items-center justify-center h-full text-gray-500
+  @apply flex items-center justify-center text-gray-500 h-full
 }
