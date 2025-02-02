@@ -1,13 +1,13 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { X } from "lucide-react";
+import { formatPhoneNumber } from "../../helpers/formatPhoneNumber";
 
 interface NewChatFormProps {
   onSubmit: (phoneNumber: string) => void;
   onClose: () => void;
 }
 
-const NewChatForm: React.FC<NewChatFormProps> = ({ onSubmit, onClose }) => {
-  console.log("NewChatForm render");
+const NewChatForm = ({ onSubmit, onClose }: NewChatFormProps) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,7 +27,6 @@ const NewChatForm: React.FC<NewChatFormProps> = ({ onSubmit, onClose }) => {
     onClose();
   };
 
-  // Обработка ввода только цифр
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const numbers = value.replace(/\D/g, "");
@@ -35,15 +34,11 @@ const NewChatForm: React.FC<NewChatFormProps> = ({ onSubmit, onClose }) => {
     setError("");
   };
 
-  // Обработка клика по оверлею
-  const handleOverlayClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.target === e.currentTarget) {
-        onClose();
-      }
-    },
-    [onClose]
-  );
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -74,15 +69,15 @@ const NewChatForm: React.FC<NewChatFormProps> = ({ onSubmit, onClose }) => {
               id="phoneNumber"
               type="tel"
               ref={inputRef}
-              value={phoneNumber}
+              value={formatPhoneNumber(phoneNumber)}
               onChange={handlePhoneChange}
-              placeholder="79991234567"
-              maxLength={11}
+              placeholder="7-777-777-77-77"
+              maxLength={15}
               className="whatsapp-phone-input"
             />
             {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
             <p className="mt-1 text-xs text-gray-500">
-              Введите номер телефона в формате 79991234567
+              Введите номер телефона в формате 7-777-777-77-77
             </p>
           </div>
 

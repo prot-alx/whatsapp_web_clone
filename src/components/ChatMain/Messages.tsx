@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import { Clock, CheckCircle2, XCircle } from "lucide-react";
 import { Message } from "../../hooks/types";
 
@@ -7,7 +7,11 @@ interface MessagesProps {
   messagesEndRef: React.RefObject<HTMLDivElement>;
 }
 
-const MessageStatus: React.FC<{ status: Message["status"] }> = ({ status }) => {
+interface MessageStatusProps {
+  status: Message["status"];
+}
+
+const MessageStatus = ({ status }: MessageStatusProps) => {
   switch (status) {
     case "sending":
       return <Clock className="w-4 h-4 text-gray-400" />;
@@ -20,8 +24,7 @@ const MessageStatus: React.FC<{ status: Message["status"] }> = ({ status }) => {
   }
 };
 
-const Messages = memo(({ messages, messagesEndRef }: MessagesProps) => {
-  console.log("Messages render");
+const Messages = ({ messages, messagesEndRef }: MessagesProps) => {
   return (
     <div className="messages-container">
       {messages.map((msg) => (
@@ -56,6 +59,6 @@ const Messages = memo(({ messages, messagesEndRef }: MessagesProps) => {
       <div ref={messagesEndRef} />
     </div>
   );
-});
+};
 
 export default Messages;

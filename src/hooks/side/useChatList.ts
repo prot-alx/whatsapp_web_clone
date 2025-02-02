@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { getChats } from "../api/api";
-import type { ChatInfo, Credentials } from "../api/interfaces";
+import { getChats } from "../../api/api";
+import type { ChatInfo, Credentials } from "../../api/interfaces";
 
 export const useChatList = ({ idInstance, apiTokenInstance }: Credentials) => {
   const [chats, setChats] = useState<ChatInfo[]>([]);

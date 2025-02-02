@@ -1,4 +1,3 @@
-import React from "react";
 import { ChatInfo } from "../../api/interfaces";
 import { Check } from "lucide-react";
 
@@ -8,12 +7,7 @@ interface ChatListProps {
   onChatSelect: (chat: ChatInfo) => void;
 }
 
-const ChatList: React.FC<ChatListProps> = ({
-  chats,
-  selectedChat,
-  onChatSelect,
-}) => {
-  console.log("ChatList render");
+const ChatList = ({ chats, selectedChat, onChatSelect }: ChatListProps) => {
   const getInitials = (chat: ChatInfo) => {
     const name = chat.name ?? chat.id.split("@")[0];
     return name.charAt(0).toUpperCase();

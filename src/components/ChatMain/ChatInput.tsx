@@ -1,22 +1,20 @@
-import { memo, useState, useCallback, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { SendHorizontal } from "lucide-react";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
 }
 
-const ChatInput = memo(({ onSend }: ChatInputProps) => {
-  console.log("ChatInput render");
+const ChatInput = ({ onSend }: ChatInputProps) => {
   const [newMessage, setNewMessage] = useState("");
-
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleSend = useCallback(() => {
+  const handleSend = () => {
     if (newMessage.trim()) {
       onSend(newMessage.trim());
       setNewMessage("");
     }
-  }, [newMessage, onSend]);
+  };
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -35,12 +33,12 @@ const ChatInput = memo(({ onSend }: ChatInputProps) => {
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
         <button onClick={handleSend} className="whatsapp-send-button">
-          <Send className="w-6 h-6" />
+          <SendHorizontal className="w-6 h-6" />
         </button>
       </div>
     </div>
   );
-});
+};
 
 ChatInput.displayName = "ChatInput";
 export default ChatInput;

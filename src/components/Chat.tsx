@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { useChatList } from "../hooks/useChatList";
-import { useChatMessages } from "../hooks/useChatMessages";
+import { useState, useRef, useEffect } from "react";
+import { useChatList } from "../hooks/side/useChatList";
 import { ChatInfo } from "../api/interfaces";
 import { ErrorState, LoadingState } from ".";
 import { ChatSidebar } from "./ChatSideBar";
 import { ChatHeader, ChatInput, ChatMain } from "./ChatMain";
+import { useChatMessages } from "../hooks/chat";
 
 interface ChatProps {
   idInstance: string;
@@ -12,11 +12,7 @@ interface ChatProps {
   onLogout: () => void;
 }
 
-const Chat: React.FC<ChatProps> = ({
-  idInstance,
-  apiTokenInstance,
-  onLogout,
-}) => {
+const Chat = ({ idInstance, apiTokenInstance, onLogout }: ChatProps) => {
   const [selectedChat, setSelectedChat] = useState<ChatInfo | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -30,16 +26,24 @@ const Chat: React.FC<ChatProps> = ({
   });
 
   const chatId = selectedChat?.id ?? null;
+
   const {
     messages,
     isLoading: isMessagesLoading,
     error: messagesError,
     sendMessage,
+    loadHistory,
   } = useChatMessages({
     idInstance,
     apiTokenInstance,
-    chatId,
+    chatId: chatId as string,
   });
+
+  useEffect(() => {
+    if (chatId) {
+      loadHistory();
+    }
+  }, [chatId, loadHistory]);
 
   // Скролл к последнему сообщению
   useEffect(() => {
@@ -50,31 +54,27 @@ const Chat: React.FC<ChatProps> = ({
     }
   }, [messages, isMessagesLoading, chatId]);
 
-  const handleSendMessage = useCallback(
-    async (message: string) => {
-      if (selectedChat) {
-        await sendMessage(message);
-      }
-    },
-    [selectedChat, sendMessage]
-  );
+  const handleSendMessage = async (message: string) => {
+    if (selectedChat) {
+      await sendMessage(message);
+    }
+  };
 
-  const handleBackToList = useCallback(() => {
+  const handleBackToList = () => {
     setSelectedChat(null);
-  }, []);
+  };
 
   if (isChatsLoading) {
     return <LoadingState />;
   }
 
-  console.log(selectedChat)
-
   return (
     <div className="whatsapp-container">
       <div className="whatsapp-layout">
         <div
-          className={`whatsapp-sidebar
-            ${selectedChat ? "hidden md:block" : "block"}`}
+          className={`whatsapp-sidebar ${
+            selectedChat ? "hidden md:block" : "block"
+          }`}
         >
           {chatsError ? (
             <ErrorState error={chatsError} />
@@ -89,8 +89,9 @@ const Chat: React.FC<ChatProps> = ({
         </div>
 
         <div
-          className={`whatsapp-main-content relative flex-1 flex flex-col h-full bg-white md:rounded-r-lg
-            ${selectedChat ? "block" : "hidden md:block"}`}
+          className={`whatsapp-main-content relative flex-1 flex flex-col h-full bg-white md:rounded-r-lg ${
+            selectedChat ? "block" : "hidden md:block"
+          }`}
         >
           {selectedChat ? (
             <>

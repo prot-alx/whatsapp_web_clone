@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { authenticate } from "./api/api";
 import { Credentials } from "./api/interfaces";
 import { Chat, Login } from "./components";
@@ -20,25 +20,22 @@ const App = () => {
   );
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = useCallback(
-    async (newCredentials: Credentials): Promise<boolean> => {
-      const response = await authenticate(newCredentials);
-      if (response.success) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newCredentials));
-        setCredentials(newCredentials);
-        setError(null);
-        return true;
-      }
-      setError(response.message);
-      return false;
-    },
-    []
-  );
+  const handleLogin = async (newCredentials: Credentials): Promise<boolean> => {
+    const response = await authenticate(newCredentials);
+    if (response.success) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newCredentials));
+      setCredentials(newCredentials);
+      setError(null);
+      return true;
+    }
+    setError(response.message);
+    return false;
+  };
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = () => {
     localStorage.removeItem(STORAGE_KEY);
     setCredentials(null);
-  }, []);
+  };
 
   return (
     <div className="main-wrapper">

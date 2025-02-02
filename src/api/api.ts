@@ -56,7 +56,6 @@ export const receiveMessage = async (
     return response.data;
   } catch (error) {
     if (axios.isCancel(error)) {
-      // Возвращаем null при отмене запроса
       return null;
     }
 
@@ -129,7 +128,7 @@ export const getChatHistory = async (
 ): Promise<ChatHistoryMessage[]> => {
   try {
     const { idInstance, apiTokenInstance } = credentials;
-    const url = `https://api.green-api.com/waInstance${idInstance}/getChatHistory/${apiTokenInstance}`;
+    const url = `${BASE_URL}/waInstance${idInstance}/getChatHistory/${apiTokenInstance}`;
     const response = await axios.post<ChatHistoryMessage[]>(url, {
       chatId,
       count,
@@ -152,7 +151,7 @@ export const getChats = async (
 ): Promise<ChatInfo[]> => {
   try {
     const { idInstance, apiTokenInstance } = credentials;
-    const url = `https://api.green-api.com/waInstance${idInstance}/getChats/${apiTokenInstance}`;
+    const url = `${BASE_URL}/waInstance${idInstance}/getChats/${apiTokenInstance}`;
     const response = await axios.get<ChatInfo[]>(url);
     return response.data;
   } catch (error) {

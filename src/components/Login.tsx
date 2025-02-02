@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Credentials } from "../api/interfaces";
 
 interface LoginProps {
@@ -7,16 +7,15 @@ interface LoginProps {
 }
 
 const Login = ({ onLogin, error }: LoginProps) => {
-  console.log('Login render');
   const [credentials, setCredentials] = useState<Credentials>(() => ({
     idInstance: "",
     apiTokenInstance: "",
   }));
   const [loading, setLoading] = useState(false);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }, []);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
